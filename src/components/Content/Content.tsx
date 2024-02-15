@@ -5,6 +5,7 @@ import { Item } from "./item";
 import { useSearchValue } from "../../hooks/contextValue";
 import { useTheme } from "../../hooks/contextTheme";
 import { useFetch } from "./servise";
+import { IUser } from "./interface";
 
 import * as S from "./ContentStyle";
 
@@ -12,7 +13,11 @@ const Content: React.FC = React.memo(() => {
   const context = useSearchValue();
   const theme = useTheme();
 
-  const data = useFetch("/search/users", context?.searchValue);
+  const [data, setData] = React.useState<IUser[]>([]);
+
+  React.useEffect(() => {
+    useFetch(context?.searchValue).then((response) => setData(response));
+  }, [context?.searchValue]);
 
   return (
     <S.Content color={theme?.theme}>

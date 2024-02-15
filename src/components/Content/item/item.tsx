@@ -5,14 +5,14 @@ import { Button } from "../../UI/Button";
 import { Icon } from "../../UI/Icon";
 
 import { useTheme } from "../../../hooks/contextTheme";
-// import { IUserDetails } from "./interface";
-// import { useFetch } from "./servise";
+import { IUserDetails } from "./interface";
+import { useFetch } from "./servise";
 
 import * as S from "./itemStyle";
 
 const Item: React.FC<IProps> = React.memo(({ avatar, login, link }) => {
   const [isVisible, setIsVisible] = React.useState(false);
-  // const [details, setDetails] = React.useState<IUserDetails>();
+  const [details, setDetails] = React.useState<IUserDetails>();
   const theme = useTheme();
 
   const handleLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -23,13 +23,10 @@ const Item: React.FC<IProps> = React.memo(({ avatar, login, link }) => {
     }
   };
 
-  // https://api.github.com/users/your-username
-
-  // const data = useFetch(`/users/${login}`);
-  const ccc = () => {
-    // setDetails(data);
+  const ccc = React.useCallback(() => {
+    useFetch(`/users/${login}`).then((response) => setDetails(response));
     setIsVisible((prev: boolean) => !prev);
-  };
+  }, [login]);
 
   return (
     <S.Item color={theme?.theme}>
@@ -49,10 +46,13 @@ const Item: React.FC<IProps> = React.memo(({ avatar, login, link }) => {
       </S.Wrapper>
       {isVisible && (
         <S.Details>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
-          <p>1</p>
+          <p>name {details?.name}</p>
+          <p>twitter {details?.twitter_username}</p>
+          <p>public_repos {details?.public_repos}</p>
+          <p>company {details?.company}</p>
+          <p>followers {details?.followers}</p>
+          <p>location {details?.location}</p>
+          <p>email {details?.email}</p>
         </S.Details>
       )}
     </S.Item>

@@ -7,23 +7,16 @@ const GITHUB_API = "https://api.github.com";
 const axiosInstance = axios.create({
   baseURL: `${GITHUB_API}`,
   headers: {
+    Authorization: `Bearer ${import.meta.env.VITE_GITHUB_TOKEN}`,
     Accept: "application/vnd.github.v3+json",
   },
 });
 
-export const useFetch = (url: string) => {
-  const [data, setData] = React.useState<IUserDetails>();
-
-  const fetchUser = useCallback(async () => {
-    try {
-      const response = await axiosInstance.get(`${url}`, {});
-      setData(response?.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [url]);
-
-  url ? fetchUser() : "";
-
-  return data;
-};
+export async function useFetch(url: string) {
+  try {
+    const response = await axiosInstance.get(`${url}`, {});
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
